@@ -1,14 +1,24 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import Header from '../components/Header';
+// import getMusics from '../services/musicsAPI';
 
 class Album extends React.Component {
+  // getSongsFromAlbum = async () => {
+  //   const songsList = await getMusics(searchInput);
+  //   this.setState({
+  //     artistAlbums: albumsList,
+  //     isLoading: false,
+  //     searchInput: '',
+  //   });
+  // };
+
+  // componentDidMount(){
+
+  // }
   render() {
     // const { match: { params } } = this.props;
     // const { id } = params;
-    // return (
-    //   id
-    //   && (
     return (
       <div data-testid="page-album">
 
