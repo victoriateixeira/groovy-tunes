@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
-import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
+import MusicCard from '../components/MusicCard';
+import Loading from './Loading';
 
 class Album extends React.Component {
   constructor() {
@@ -11,11 +13,14 @@ class Album extends React.Component {
     this.state = {
       songsList: [],
       requestComplete: false,
+      isLoading: false,
+      // favSongsList: [],
     };
   }
 
   componentDidMount() {
     this.getSongsFromAlbum();
+    this.fetchFavSongs();
   }
 
   getSongsFromAlbum = async () => {
@@ -29,16 +34,60 @@ class Album extends React.Component {
       albumName: results[0].collectionName,
       requestComplete: true,
     });
-    console.log(songsList);
+    // console.log(songsList);
+  };
+
+  favoritesSong = async (event) => {
+    const { songsList } = this.state;
+    const favSongId = Number(event.target.id);
+    const statusSong = event.target.checked;
+    console.log(statusSong);
+    this.setState({ isLoading: true });
+    const favSong = songsList.filter((song) => song.trackId === favSongId)[0];
+    // console.log(statusSong);
+    // console.log(typeof favSong);
+    if (statusSong) {
+      await addSong(favSong);
+      this.setState({
+        isLoading: false,
+      // favSongsList: [...prevState.favSongsList, favSong],
+      });
+    } else {
+      await removeSong(favSong);
+      this.setState({
+        isLoading: false,
+        // favSongsList: prevState.favSongsList.filter((song) => song !== favSong),
+      });
+    }
+  };
+
+  fetchFavSongs = async () => {
+    this.setState({ isLoading: true });
+    const favoriteSongsList = await getFavoriteSongs();
+    const idTest = 80812034;
+    console.log(favoriteSongsList);
+    console.log(favoriteSongsList.some((fav) => fav.trackId === idTest));
+    this.setState({
+      favoriteSongsList,
+      isLoading: false,
+    });
   };
 
   render() {
-    const { songsList, requestComplete, artistName, albumName } = this.state;
+    const {
+      songsList,
+      requestComplete,
+      artistName, albumName,
+      isLoading, favoriteSongsList } = this.state;
     return (
       <div data-testid="page-album">
 
         <Header />
-        {requestComplete
+        {
+          isLoading && <Loading />
+        }
+        {
+          requestComplete
         && (
           <div>
 
@@ -53,9 +102,14 @@ class Album extends React.Component {
               key={ song.trackId }
               trackName={ song.trackName }
               previewURL={ song.previewURL }
+              trackId={ song.trackId }
+              favoritesSong={ this.favoritesSong }
+              favoriteSongsList={ favoriteSongsList }
+
             />))}
           </div>
-        )}
+        )
+        }
       </div>
     );
   }
