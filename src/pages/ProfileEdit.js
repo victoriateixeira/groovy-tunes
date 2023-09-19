@@ -97,12 +97,12 @@ class ProfileEdit extends React.Component {
                   placeholder="insira um link"
                 />
               </label>
-              <label htmlFor="username">
+              <label htmlFor="name">
                 Name
                 <input
                   type="text"
-                  name="username"
-                  id="username"
+                  name="name"
+                  id="name"
                   value={ name }
                   onChange={ this.onInputChange }
                   data-testid="edit-input-name"
