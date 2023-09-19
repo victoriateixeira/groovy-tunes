@@ -43,6 +43,8 @@ class MusicCard extends React.Component {
       this.setState({
         checked: false,
       });
+      const { updatesFav } = this.props;
+      updatesFav(song.trackId);
     }
     this.setState({
       isLoading: false,
@@ -85,7 +87,10 @@ class MusicCard extends React.Component {
 
 MusicCard.propTypes = {
   song: PropTypes.PropTypes.shape().isRequired,
+  updatesFav: PropTypes.func,
 
 };
-
+MusicCard.defaultProps = {
+  updatesFav: () => {},
+};
 export default MusicCard;
